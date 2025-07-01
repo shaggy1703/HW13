@@ -1,6 +1,5 @@
 package org.skypro.skyshop.basket;
 
-
 import org.skypro.skyshop.product.Product;
 
 public class ProductBasket {
@@ -8,7 +7,7 @@ public class ProductBasket {
     private int count;
 
     public ProductBasket() {
-        this.products = new Product[5];
+        this.products = new Product[10]; // Расширим для удобства
         this.count = 0;
     }
 
@@ -23,7 +22,7 @@ public class ProductBasket {
     public int getTotalPrice() {
         int total = 0;
         for (int i = 0; i < count; i++) {
-            total += products[i].getProductPrice();
+            total += products[i].getPrice();
         }
         return total;
     }
@@ -35,14 +34,24 @@ public class ProductBasket {
         }
 
         for (int i = 0; i < count; i++) {
-            System.out.printf("%s: %d%n", products[i].getProduct(), products[i].getProductPrice());
+            System.out.println(products[i]);
         }
+
         System.out.printf("Итого: %d%n", getTotalPrice());
+
+        int specialCount = 0;
+        for (int i = 0; i < count; i++) {
+            if (products[i].isSpecial()) {
+                specialCount++;
+            }
+        }
+
+        System.out.printf("Специальных товаров: %d%n", specialCount);
     }
 
     public boolean contains(String productName) {
         for (int i = 0; i < count; i++) {
-            if (products[i].getProduct().equalsIgnoreCase(productName)) {
+            if (products[i].getName().equalsIgnoreCase(productName)) {
                 return true;
             }
         }
