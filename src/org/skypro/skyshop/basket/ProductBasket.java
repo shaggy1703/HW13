@@ -11,6 +11,7 @@ public class ProductBasket {
         this.count = 0;
     }
 
+
     public void addProduct(Product product) {
         if (count >= products.length) {
             System.out.println("Невозможно добавить продукт");
