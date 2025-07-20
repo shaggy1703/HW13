@@ -1,6 +1,7 @@
 package org.skypro.skyshop;
 
 import org.skypro.skyshop.SearchEngine.SearchEngine;
+import org.skypro.skyshop.SearchEngine.BestResultNotFound;
 import org.skypro.skyshop.article.Article;
 import org.skypro.skyshop.basket.ProductBasket;
 import org.skypro.skyshop.product.*;
@@ -13,6 +14,22 @@ import java.util.Arrays;
 
 public class App {
     public static void main(String[] args) {
+
+        try {
+            Product invalid1 = new SimpleProduct("Шоколад", 0);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Ошибка: " + e.getMessage());
+        }
+        try {
+            Product invalid2 = new DiscountedProduct("Шоколад", 100, 101);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Ошибка: " + e.getMessage());
+        }
+        try {
+            Product invalid3 = new SimpleProduct("   ", 50);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Ошибка: " + e.getMessage());
+        }
 
         Product apple = new SimpleProduct("Яблоко", 50);
         Product banana = new SimpleProduct("Банан", 70);
@@ -61,6 +78,9 @@ public class App {
         engine.add(article2);
         engine.add(article3);
 
+        testBestSearch(engine, "шоколад");
+        testBestSearch(engine, "виноград");
+
         System.out.println("\n\n🔍 Результаты поиска 'шоколад':");
         System.out.println(Arrays.toString(engine.search("шоколад")));
 
@@ -69,5 +89,14 @@ public class App {
 
         System.out.println("\n🔍 Результаты поиска 'фрукты':");
         System.out.println(Arrays.toString(engine.search("фрукты")));
+    }
+
+    private static void testBestSearch(SearchEngine engine, String query) {
+        try {
+            System.out.println("\n🔍 Поиск лучшего результата для запроса \"" + query + "\":");
+            System.out.println(engine.findBestMatch(query));
+        } catch (BestResultNotFound e) {
+            System.out.println("Ошибка: " + e.getMessage());
+        }
     }
 }
