@@ -10,6 +10,7 @@ import org.skypro.skyshop.product.FixPriceProduct;
 import org.skypro.skyshop.product.SimpleProduct;
 
 import java.util.Arrays;
+import java.util.List;
 
 
 public class App {
@@ -61,6 +62,41 @@ public class App {
         System.out.println("Есть ли Банан в корзине? " + basket.contains("Банан"));
         System.out.println("Есть ли Виноград в корзине? " + basket.contains("Виноград"));
 
+        Product apple2 = new SimpleProduct("Яблоко", 55);
+        basket.addProduct(apple2);
+
+        System.out.println("\n=== ДЕМОНСТРАЦИЯ УДАЛЕНИЯ ПРОДУКТОВ ===");
+        System.out.println("Содержимое корзины перед удалением:");
+        basket.printContents();
+
+        List<Product> removedProducts = basket.removeProductByName("Яблоко");
+
+        System.out.println("\nУдаленные продукты (Яблоко):");
+        if (removedProducts.isEmpty()) {
+            System.out.println("Список пуст");
+        } else {
+            for (Product product : removedProducts) {
+                System.out.println(product);
+            }
+        }
+
+        System.out.println("\nСодержимое корзины после удаления Яблока:");
+        basket.printContents();
+
+        List<Product> removedNonExisting = basket.removeProductByName("Груша");
+
+        System.out.println("\nУдаленные продукты (Груша):");
+        if (removedNonExisting.isEmpty()) {
+            System.out.println("Список пуст");
+        } else {
+            for (Product product : removedNonExisting) {
+                System.out.println(product);
+            }
+        }
+
+        System.out.println("\nСодержимое корзины после попытки удаления Груши:");
+        basket.printContents();
+
         basket.clear();
 
         System.out.println("\nСодержимое после очистки:");
@@ -82,13 +118,25 @@ public class App {
         testBestSearch(engine, "виноград");
 
         System.out.println("\n\n🔍 Результаты поиска 'шоколад':");
-        System.out.println(Arrays.toString(engine.search("шоколад")));
+
+        List<Searchable> chocolateResults = engine.search("шоколад");
+        for (Searchable item : chocolateResults) {
+            System.out.println(item);
+        }
 
         System.out.println("\n🔍 Результаты поиска 'молоко':");
-        System.out.println(Arrays.toString(engine.search("молоко")));
+
+        List<Searchable> milkResults = engine.search("молоко");
+        for (Searchable item : milkResults) {
+            System.out.println(item);
+        }
 
         System.out.println("\n🔍 Результаты поиска 'фрукты':");
-        System.out.println(Arrays.toString(engine.search("фрукты")));
+
+        List<Searchable> fruitResults = engine.search("фрукты");
+        for (Searchable item : fruitResults) {
+            System.out.println(item);
+        }
     }
 
     private static void testBestSearch(SearchEngine engine, String query) {
