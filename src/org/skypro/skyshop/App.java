@@ -11,6 +11,7 @@ import org.skypro.skyshop.product.SimpleProduct;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 
 public class App {
@@ -65,7 +66,7 @@ public class App {
         Product apple2 = new SimpleProduct("Яблоко", 55);
         basket.addProduct(apple2);
 
-        System.out.println("\n=== ДЕМОНСТРАЦИЯ УДАЛЕНИЯ ПРОДУКТОВ ===");
+        
         System.out.println("Содержимое корзины перед удалением:");
         basket.printContents();
 
@@ -119,23 +120,23 @@ public class App {
 
         System.out.println("\n\n🔍 Результаты поиска 'шоколад':");
 
-        List<Searchable> chocolateResults = engine.search("шоколад");
-        for (Searchable item : chocolateResults) {
-            System.out.println(item);
+        Map<String, Searchable> chocolateResults = engine.search("шоколад");
+        for (Map.Entry<String, Searchable> entry : chocolateResults.entrySet()) {
+            System.out.println(entry.getValue());
         }
 
         System.out.println("\n🔍 Результаты поиска 'молоко':");
 
-        List<Searchable> milkResults = engine.search("молоко");
-        for (Searchable item : milkResults) {
-            System.out.println(item);
+        Map<String, Searchable> milkResults = engine.search("молоко");
+        for (Map.Entry<String, Searchable> entry : milkResults.entrySet()) {
+            System.out.println(entry.getValue());
         }
 
         System.out.println("\n🔍 Результаты поиска 'фрукты':");
 
-        List<Searchable> fruitResults = engine.search("фрукты");
-        for (Searchable item : fruitResults) {
-            System.out.println(item);
+        Map<String, Searchable> fruitResults = engine.search("фрукты");
+        for (Map.Entry<String, Searchable> entry : fruitResults.entrySet()) {
+            System.out.println(entry.getValue());
         }
     }
 

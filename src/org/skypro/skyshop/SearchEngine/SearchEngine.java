@@ -14,12 +14,12 @@ public class SearchEngine {
         items.add(item);
     }
 
-    public List<Searchable> search(String query) {
-        List<Searchable> result = new ArrayList<>();
+    public Map<String, Searchable> search(String query) {
+        Map<String, Searchable> result = new TreeMap<>(); // TreeMap для автоматической сортировки
 
         for (Searchable item : items) {
             if (item != null && item.getSearchTerm().toLowerCase().contains(query.toLowerCase())) {
-                result.add(item);
+                result.put(item.getSearchTerm(), item);
             }
         }
 

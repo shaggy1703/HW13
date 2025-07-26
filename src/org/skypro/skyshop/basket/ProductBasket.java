@@ -4,24 +4,27 @@ import org.skypro.skyshop.product.Product;
 import java.util.*;
 
 public class ProductBasket {
-    private final List<Product> products;
+    private final Map<String, List<Product>> products;
 
     public ProductBasket() {
-        this.products = new ArrayList<>();
+        this.products = new HashMap<>();
     }
 
     public void addProduct(Product product) {
-        products.add(product);
+        String name = product.getName();
+        products.computeIfAbsent(name, k -> new ArrayList<>()).add(product);
     }
 
     public List<Product> removeProductByName(String name) {
+        String normalizedName = name.toLowerCase().trim();
         List<Product> removed = new ArrayList<>();
-        Iterator<Product> iterator = products.iterator();
+
+        Iterator<Map.Entry<String, List<Product>>> iterator = products.entrySet().iterator();
 
         while (iterator.hasNext()) {
-            Product product = iterator.next();
-            if (product.getName().equalsIgnoreCase(name)) {
-                removed.add(product);
+            Map.Entry<String, List<Product>> entry = iterator.next();
+            if (entry.getKey().equalsIgnoreCase(normalizedName)) {
+                removed.addAll(entry.getValue());
                 iterator.remove();
             }
         }
@@ -31,8 +34,10 @@ public class ProductBasket {
 
     public int getTotalPrice() {
         int total = 0;
-        for (Product product : products) {
-            total += product.getPrice();
+        for (List<Product> productList : products.values()) {
+            for (Product product : productList) {
+                total += product.getPrice();
+            }
         }
         return total;
     }
@@ -43,16 +48,20 @@ public class ProductBasket {
             return;
         }
 
-        for (Product product : products) {
-            System.out.println(product);
+        for (List<Product> productList : products.values()) {
+            for (Product product : productList) {
+                System.out.println(product);
+            }
         }
 
         System.out.printf("Итого: %d%n", getTotalPrice());
 
         int specialCount = 0;
-        for (Product product : products) {
-            if (product.isSpecial()) {
-                specialCount++;
+        for (List<Product> productList : products.values()) {
+            for (Product product : productList) {
+                if (product.isSpecial()) {
+                    specialCount++;
+                }
             }
         }
 
@@ -60,8 +69,9 @@ public class ProductBasket {
     }
 
     public boolean contains(String productName) {
-        for (Product product : products) {
-            if (product.getName().equalsIgnoreCase(productName)) {
+        String normalizedName = productName.toLowerCase().trim();
+        for (String name : products.keySet()) {
+            if (name.equalsIgnoreCase(normalizedName)) {
                 return true;
             }
         }
