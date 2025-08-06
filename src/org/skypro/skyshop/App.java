@@ -12,6 +12,7 @@ import org.skypro.skyshop.product.SimpleProduct;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 
 public class App {
@@ -44,6 +45,8 @@ public class App {
         Article article1 = new Article("Как выбрать фрукты", "Выбирайте фрукты с ярким цветом и умеренной мягкостью.");
         Article article2 = new Article("Рецепт шоколадного торта", "Вам понадобится какао, мука и сахар.");
         Article article3 = new Article("Польза молока", "Молоко богато кальцием.");
+        Article article4 = new Article("АБВ", "Короткая статья");
+        Article article5 = new Article("АБВГДЕ", "Длинная статья");
 
         ProductBasket basket = new ProductBasket();
 
@@ -63,10 +66,11 @@ public class App {
         System.out.println("Есть ли Банан в корзине? " + basket.contains("Банан"));
         System.out.println("Есть ли Виноград в корзине? " + basket.contains("Виноград"));
 
+
         Product apple2 = new SimpleProduct("Яблоко", 55);
         basket.addProduct(apple2);
 
-        
+        System.out.println("\n=== ДЕМОНСТРАЦИЯ УДАЛЕНИЯ ПРОДУКТОВ ===");
         System.out.println("Содержимое корзины перед удалением:");
         basket.printContents();
 
@@ -114,29 +118,34 @@ public class App {
         engine.add(article1);
         engine.add(article2);
         engine.add(article3);
+        engine.add(article4);
+        engine.add(article5);
+
+        engine.add(new SimpleProduct("Яблоко", 60));
+        engine.add(new Article("Как выбрать фрукты", "Другое содержание"));
+
+        System.out.println("\nПроверка дубликатов - размер должен быть 7: " +
+                engine.getSize());
 
         testBestSearch(engine, "шоколад");
         testBestSearch(engine, "виноград");
 
-        System.out.println("\n\n🔍 Результаты поиска 'шоколад':");
-
-        Map<String, Searchable> chocolateResults = engine.search("шоколад");
-        for (Map.Entry<String, Searchable> entry : chocolateResults.entrySet()) {
-            System.out.println(entry.getValue());
+        System.out.println("\n\n🔍 Результаты поиска 'шоколад' (отсортированы по длине названия):");
+        Set<Searchable> chocolateResults = engine.search("шоколад");
+        for (Searchable item : chocolateResults) {
+            System.out.println(item);
         }
 
-        System.out.println("\n🔍 Результаты поиска 'молоко':");
-
-        Map<String, Searchable> milkResults = engine.search("молоко");
-        for (Map.Entry<String, Searchable> entry : milkResults.entrySet()) {
-            System.out.println(entry.getValue());
+        System.out.println("\n🔍 Результаты поиска 'фрукты' (отсортированы по длине названия):");
+        Set<Searchable> fruitResults = engine.search("фрукты");
+        for (Searchable item : fruitResults) {
+            System.out.println(item);
         }
 
-        System.out.println("\n🔍 Результаты поиска 'фрукты':");
-
-        Map<String, Searchable> fruitResults = engine.search("фрукты");
-        for (Map.Entry<String, Searchable> entry : fruitResults.entrySet()) {
-            System.out.println(entry.getValue());
+        System.out.println("\n🔍 Результаты поиска 'АБВ' (демонстрация сортировки по длине):");
+        Set<Searchable> abvResults = engine.search("АБВ");
+        for (Searchable item : abvResults) {
+            System.out.println(item);
         }
     }
 

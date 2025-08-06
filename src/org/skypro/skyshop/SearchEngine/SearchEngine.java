@@ -4,26 +4,36 @@ import org.skypro.skyshop.product.Searchable;
 import java.util.*;
 
 public class SearchEngine {
-    private final List<Searchable> items;
+    private final Set<Searchable> items;
 
     public SearchEngine(int capacity) {
-        this.items = new ArrayList<>();
+        this.items = new HashSet<>();
     }
 
     public void add(Searchable item) {
         items.add(item);
     }
 
-    public Map<String, Searchable> search(String query) {
-        Map<String, Searchable> result = new TreeMap<>(); // TreeMap для автоматической сортировки
+    public Set<Searchable> search(String query) {
+        Set<Searchable> result = new TreeSet<>(getSearchableComparator());
 
         for (Searchable item : items) {
             if (item != null && item.getSearchTerm().toLowerCase().contains(query.toLowerCase())) {
-                result.put(item.getSearchTerm(), item);
+                result.add(item);
             }
         }
 
         return result;
+    }
+
+    private Comparator<Searchable> getSearchableComparator() {
+        return (s1, s2) -> {
+            int lengthComparison = Integer.compare(s2.getSearchTerm().length(), s1.getSearchTerm().length());
+            if (lengthComparison != 0) {
+                return lengthComparison;
+            }
+            return s1.getSearchTerm().compareTo(s2.getSearchTerm());
+        };
     }
 
     private int countOccurrences(String text, String substring) {
@@ -66,5 +76,8 @@ public class SearchEngine {
         }
 
         return bestMatch;
+    }
+    public int getSize() {
+        return items.size();
     }
 }
