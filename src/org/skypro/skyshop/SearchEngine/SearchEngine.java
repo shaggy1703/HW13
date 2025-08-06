@@ -5,9 +5,11 @@ import java.util.*;
 
 public class SearchEngine {
     private final Set<Searchable> items;
+    private final SearchableComparator comparator;
 
     public SearchEngine(int capacity) {
         this.items = new HashSet<>();
+        this.comparator = new SearchableComparator();
     }
 
     public void add(Searchable item) {
@@ -15,7 +17,7 @@ public class SearchEngine {
     }
 
     public Set<Searchable> search(String query) {
-        Set<Searchable> result = new TreeSet<>(getSearchableComparator());
+        Set<Searchable> result = new TreeSet<>(comparator);
 
         for (Searchable item : items) {
             if (item != null && item.getSearchTerm().toLowerCase().contains(query.toLowerCase())) {
@@ -26,14 +28,8 @@ public class SearchEngine {
         return result;
     }
 
-    private Comparator<Searchable> getSearchableComparator() {
-        return (s1, s2) -> {
-            int lengthComparison = Integer.compare(s2.getSearchTerm().length(), s1.getSearchTerm().length());
-            if (lengthComparison != 0) {
-                return lengthComparison;
-            }
-            return s1.getSearchTerm().compareTo(s2.getSearchTerm());
-        };
+    public int getSize() {
+        return items.size();
     }
 
     private int countOccurrences(String text, String substring) {
@@ -76,8 +72,5 @@ public class SearchEngine {
         }
 
         return bestMatch;
-    }
-    public int getSize() {
-        return items.size();
     }
 }

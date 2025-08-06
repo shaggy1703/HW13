@@ -124,9 +124,6 @@ public class App {
         engine.add(new SimpleProduct("Яблоко", 60));
         engine.add(new Article("Как выбрать фрукты", "Другое содержание"));
 
-        System.out.println("\nПроверка дубликатов - размер должен быть 7: " +
-                engine.getSize());
-
         testBestSearch(engine, "шоколад");
         testBestSearch(engine, "виноград");
 
