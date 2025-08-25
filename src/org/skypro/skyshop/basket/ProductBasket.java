@@ -1,8 +1,8 @@
 package org.skypro.skyshop.basket;
 
-
 import org.skypro.skyshop.product.Product;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ProductBasket {
     private final Map<String, List<Product>> products;
@@ -34,13 +34,17 @@ public class ProductBasket {
     }
 
     public int getTotalPrice() {
-        int total = 0;
-        for (List<Product> productList : products.values()) {
-            for (Product product : productList) {
-                total += product.getPrice();
-            }
-        }
-        return total;
+        return products.values().stream()
+                .flatMap(Collection::stream)
+                .mapToInt(Product::getPrice)
+                .sum();
+    }
+
+    private long getSpecialCount() {
+        return products.values().stream()
+                .flatMap(Collection::stream)
+                .filter(Product::isSpecial)
+                .count();
     }
 
     public void printContents() {
@@ -49,34 +53,18 @@ public class ProductBasket {
             return;
         }
 
-        for (List<Product> productList : products.values()) {
-            for (Product product : productList) {
-                System.out.println(product);
-            }
-        }
+        products.values().stream()
+                .flatMap(Collection::stream)
+                .forEach(System.out::println);
 
         System.out.printf("Итого: %d%n", getTotalPrice());
-
-        int specialCount = 0;
-        for (List<Product> productList : products.values()) {
-            for (Product product : productList) {
-                if (product.isSpecial()) {
-                    specialCount++;
-                }
-            }
-        }
-
-        System.out.printf("Специальных товаров: %d%n", specialCount);
+        System.out.printf("Специальных товаров: %d%n", getSpecialCount());
     }
 
     public boolean contains(String productName) {
         String normalizedName = productName.toLowerCase().trim();
-        for (String name : products.keySet()) {
-            if (name.equalsIgnoreCase(normalizedName)) {
-                return true;
-            }
-        }
-        return false;
+        return products.keySet().stream()
+                .anyMatch(name -> name.equalsIgnoreCase(normalizedName));
     }
 
     public void clear() {

@@ -2,6 +2,7 @@ package org.skypro.skyshop.SearchEngine;
 
 import org.skypro.skyshop.product.Searchable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class SearchEngine {
     private final Set<Searchable> items;
@@ -17,15 +18,10 @@ public class SearchEngine {
     }
 
     public Set<Searchable> search(String query) {
-        Set<Searchable> result = new TreeSet<>(comparator);
-
-        for (Searchable item : items) {
-            if (item != null && item.getSearchTerm().toLowerCase().contains(query.toLowerCase())) {
-                result.add(item);
-            }
-        }
-
-        return result;
+        return items.stream()
+                .filter(item -> item != null &&
+                        item.getSearchTerm().toLowerCase().contains(query.toLowerCase()))
+                .collect(Collectors.toCollection(() -> new TreeSet<>(comparator)));
     }
 
     public int getSize() {
@@ -55,22 +51,11 @@ public class SearchEngine {
         if (query == null || query.isBlank()) {
             throw new IllegalArgumentException("Поисковая строка не может быть пустой.");
         }
-        Searchable bestMatch = null;
-        int maxCount = 0;
 
-        for (Searchable item : items) {
-            if (item == null) continue;
-            int occurrences = countOccurrences(item.getSearchTerm(), query);
-            if (occurrences > maxCount) {
-                maxCount = occurrences;
-                bestMatch = item;
-            }
-        }
-
-        if (bestMatch == null) {
-            throw new BestResultNotFound("Не найдено подходящих результатов для запроса: " + query);
-        }
-
-        return bestMatch;
+        return items.stream()
+                .filter(Objects::nonNull)
+                .filter(item -> countOccurrences(item.getSearchTerm(), query) > 0)
+                .max(Comparator.comparingInt(item -> countOccurrences(item.getSearchTerm(), query)))
+                .orElseThrow(() -> new BestResultNotFound("Не найдено подходящих результатов для запроса: " + query));
     }
 }
