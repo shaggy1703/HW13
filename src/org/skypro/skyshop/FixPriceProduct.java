@@ -13,7 +13,6 @@ public class FixPriceProduct extends Product {
     }
 
 
-
     @Override
     public boolean isSpecial() {
         return true;

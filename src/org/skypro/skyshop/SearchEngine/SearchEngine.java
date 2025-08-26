@@ -1,6 +1,7 @@
 package org.skypro.skyshop.SearchEngine;
 
 import org.skypro.skyshop.product.Searchable;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
